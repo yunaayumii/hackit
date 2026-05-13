@@ -6,7 +6,9 @@ This document lists the refined features for the project, combining the core str
 
 ## 1. Dynamic Repayment Stress Simulator (The Core)
 **Function:** A real-time tool that calculates if a loan fits a borrower's specific cash flow.
-- **Inputs:** Loan Amount, Total Repayment, Due Date, Normal Daily Sales, and Minimum Cash Buffer (float).
+- **Guest Inputs:** Loan Amount, Total Repayment, Due Date, Normal Daily Cash Left After Expenses, Bad-Day Cash Left After Expenses, and Minimum Cash Buffer.
+- **Estimator Helper:** If the user does not know cash left after expenses, the app can optionally estimate it from daily sales minus basic daily costs without adding required steps.
+- **Core Formula:** Projected Cash After Repayment = Daily Cash Left After Expenses x Days Until Due - Total Repayment.
 - **Outcome:** A dynamic visual gauge (Green/Yellow/Red) showing the cash health *after* the payment is made.
 - **"Aha!" Moment:** Translates abstract loan numbers into a simple "Safe" or "Danger" signal.
 
@@ -14,6 +16,7 @@ This document lists the refined features for the project, combining the core str
 **Function:** Lets users test how much income can drop before a loan becomes unsafe.
 - **Breakpoint Analysis:** Tells the user the exact income drop percentage they can survive before they can no longer afford the loan.
 - **Percentage Drop Use Cases:** Buttons for "10% Drop", "30% Drop", "60% Drop", and "100% Drop".
+- **Bad-Day Anchor:** The user's bad-day cash input creates a personalized stress case and can be shown as an equivalent percentage drop from their normal day.
 - **"Aha!" Moment:** Shows the user precisely where their "breaking point" is before they sign the contract.
 
 ## 3. True Cost Revealer (Oliver's Suggestion)
@@ -29,8 +32,8 @@ This document lists the refined features for the project, combining the core str
 - **"Aha!" Moment:** Makes the *timing* of the risk visible, not just the amount.
 
 ## 5. Safer Borrowing Suggestions
-**Function:** Provides actionable alternatives when a loan fails the stress test.
-- **Actionable Advice:** If the result is Red, the app suggests: "Borrow 20% less" or "Ask for a 30-day term instead of 7-day."
+**Function:** Provides math-based alternatives when a loan fails the stress test.
+- **Actionable Guidance:** If the result is Red, the app shows options that keep projected cash above the user's minimum buffer, such as "Borrow 20% less" or "Ask for a 30-day term instead of 7-day."
 - **Side-by-Side Comparison:** Compare a "risky" loan vs. a "safe" suggestion to see the difference in cash buffer.
 - **"Aha!" Moment:** Doesn't just say "No," but shows the user a path to a safer loan.
 
@@ -40,4 +43,4 @@ This document lists the refined features for the project, combining the core str
 - **AI-Driven Clarity:** Uses simple, human language to explain financial terms based on the user's current data.
 - **"Aha!" Moment:** Provides "just-in-time" learning at the exact moment a decision is being made.
 
-*Note: Technical features like "Login" and "Manual Database Entry" have been descoped to prioritize the live demo experience and the core "Aha!" moments.*
+*Note: Production login, real databases, and manual database entry are descoped for the live demo. The prototype may show an optional login/profile path with mocked data only if it helps explain why more inputs improve accuracy.*

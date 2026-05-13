@@ -12,17 +12,23 @@ This document outlines the user journeys and system logic for the Repayment Stre
 - **System Display:** 
   - Visual headline: "Is your next loan safe for your business?"
   - Quick summary of the "Repayment Stress Simulator."
-  - **CTA:** [Start Free Stress Test] or [Login/Sign Up].
+  - **CTA:** [Start Free Stress Test] with an optional [Login for More Accurate Results] path.
 - **Feature Integrated:** Value proposition highlighting the **True Cost Revealer**.
 
-### 2. Registration/Login (The Trust Step)
-- **User Action:** Enters basic credentials (or uses "Demo Mode/Guest" for the pitch).
-- **System Requirement:** 
-  - Collects minimal business profile: Store Name, Primary Sales Category (e.g., Grocery, Online Shop).
-  - *Note: To maintain our "Laser-Focused Pitch" strategy, this step should be as fast as possible (e.g., One-tap Google or Phone login).*
+### 2. Guest Mode or Optional Login
+- **User Action:** Starts the stress test without logging in, or logs in only if they want more accurate results.
+- **Guest Requirement:** Ask only the six basic inputs needed for a fast estimate:
+  - Amount to borrow
+  - Total repayment
+  - Due date
+  - Normal daily cash left after basic expenses
+  - Bad-day cash left after basic expenses
+  - Minimum cash they must keep
+- **Input Helper:** For the two cash-left fields, show an optional "Help me estimate" helper that calculates cash left from daily sales minus basic daily costs. The helper should not be required for the main guest flow.
+- **Optional Login Requirement:** If the user wants better accuracy, collect a richer business profile later: store type, sales pattern, recurring expenses, restocking needs, household survival floor, existing debts, and slow days.
 
-### 3. Setup: Adaptive Cash Flow Profile (The Baseline)
-**Goal:** Gather accurate data based on the user's specific income type to make the "Stress Test" relevant.
+### 3. Optional Accuracy Upgrade: Adaptive Cash Flow Profile
+**Goal:** Gather more accurate data only when the user chooses the login/profile path. Guest users can skip this and use the six basic inputs above.
 
 - **A. Category Selection:**
   - System asks: "How do you earn your money?"
@@ -46,14 +52,16 @@ This document outlines the user journeys and system logic for the Repayment Stre
 - **C. Common Foundations (For All Users):**
   - **Personal Survival Floor:** "How much do you *need* to take home for your family's basic daily needs (Food, Medicine, School)?"
   - **Existing Debt:** "Total daily or weekly payments for other loans you are currently paying off?"
-  - **Income Drop Sensitivity:** "How much can your income drop before you cannot safely repay?" (Feeds **Percentage Drop Testing**).
+  - **Income Baseline:** "On a normal day, how much cash is left after basic expenses?"
+  - **Bad-Day Baseline:** "On a bad day, how much cash is left after basic expenses?"
+  - **Minimum Cash Buffer:** "What is the minimum cash you must keep after repayment?"
 
 - **Feature Integrated:** **Contextual Micro-Lessons** (A tip appears: "Your 'Survival Floor' is your most important number. If a loan cuts into this, it puts your family at risk.")
 
 ### 4. Personal Dashboard (The Hub)
 - **User Action:** Arrives at the main screen.
 - **System Display:** 
-  - Current "Cash Health" status (currently "Ready" since no loan is active).
+  - Current "Cash Health" status based on the guest estimate or saved profile.
   - Visual Feed: "Recent Loans Checked" (empty for new user).
   - **Primary CTA:** [Test a New Loan Offer].
 - **Feature Integrated:** **Danger Zone Calendar** (Shows a preview of the current month with no risks marked yet).
@@ -78,7 +86,15 @@ This document outlines the user journeys and system logic for the Repayment Stre
 - **Feature Integrated:** **True Cost Revealer**.
 
 ### 3. The Stress Simulation (The "Aha!" Moment)
-- **System Action:** Runs the loan numbers against the user's **Adaptive Profile** (Flow 1).
+- **System Action:** Runs the loan numbers against the user's guest inputs or saved profile.
+- **Guest Formula:**
+  - Days Until Due = number of days from today to the due date.
+  - Projected Cash After Repayment = Normal Daily Cash Left After Expenses x Days Until Due - Total Repayment.
+  - The borrowed amount is not counted as spare cash because it is assumed to be used for inventory, bills, or another borrowing purpose.
+- **Gauge Logic:**
+  - **GREEN:** Projected cash after repayment is greater than or equal to the user's minimum cash buffer.
+  - **YELLOW:** Projected cash after repayment is non-negative but below the user's minimum cash buffer.
+  - **RED:** Projected cash after repayment is negative.
 - **System Display:** A large, dynamic **Cash Health Gauge**.
   - **GREEN:** "Manageable. You maintain your survival floor and inventory needs."
   - **YELLOW:** "Thin Buffer. A few bad sales days could force you to use your food budget to pay."
@@ -109,13 +125,16 @@ This document outlines the user journeys and system logic for the Repayment Stre
   - **[Moderate Drop - 30%]:** Models a 30% income drop for 7 days.
   - **[Major Disruption - 60%]:** Models a 60% income drop for 7 days.
   - **[Zero Income - 100%]:** Models a 100% income drop for 3 consecutive days.
+  - **[My Bad Day]:** Uses the user's bad-day cash-left input as a personalized stress case.
   - **[Custom Slider]:** Allows user to manually drop income by any percentage (0% to 100%) to see the exact moment the gauge turns Red.
 - **Feature Integrated:** **Breakpoint & Percentage Drop Testing**.
 
 ### 2. Dynamic Impact Animation
 - **System Action:** Instantly recalculates the **Cash Health Gauge** and **Breakpoint Analysis** based on the selected percentage drop.
+  - For percentage buttons: Stress Daily Cash Left = Normal Daily Cash Left x (1 - Drop Percentage).
+  - For My Bad Day: Stress Daily Cash Left = Bad-Day Cash Left After Expenses.
 - **System Display:** The Gauge needle moves in real-time.
-  - *Example:* A "Green" loan (Safe) may swing to "Red" (Danger) when the [3-Day Sickness] scenario is activated.
+  - *Example:* A "Green" loan (Safe) may swing to "Red" (Danger) when a 60% income drop is activated.
 
 ### 3. Crisis Explanation & Impact
 - **System Display:** A blunt, factual summary of the financial gap:
@@ -125,8 +144,8 @@ This document outlines the user journeys and system logic for the Repayment Stre
 
 ### 4. Resilience Recommendation
 - **System Display:** Updates the **Safer Borrowing Suggestions** to account for the crisis.
-  - "To survive a 3-day sickness with this loan, we recommend keeping a **₱2,500 cash buffer** on hand *before* you borrow."
-  - "Alternatively, reducing the loan to **₱4,000** keeps you safe even if you get sick."
+  - "To survive this income drop with this loan, the math shows you need a **₱2,500 cash buffer** on hand *before* you borrow."
+  - "Alternatively, reducing the loan to **₱4,000** keeps your projected cash above the minimum buffer."
 
 ---
 
